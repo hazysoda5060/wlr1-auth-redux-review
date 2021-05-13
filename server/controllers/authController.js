@@ -1,3 +1,5 @@
+const bcrypt = require('bcryptjs')
+
 module.exports = {
   register: async (req, res) => {
     const db = req.app.get('db')
@@ -9,7 +11,7 @@ module.exports = {
     const salt = bcrypt.genSaltSync(10)
     const hash = bcrypt.hashSync(password, salt)
     const [user] = await db.auth.register_user(email, hash)
-    delete user.password
+    delete user.user_password
     req.session.user = user
     return res.status(200).send(req.session.user)
   },
@@ -20,11 +22,12 @@ module.exports = {
     if(!user){
       return res.status(401).send("User not found.")
     }
-    const isAuthenticated = bcrypt.compareSync(password, user.password)
+    const isAuthenticated = bcrypt.compareSync(password, user.user_password)
     if(!isAuthenticated){
       return res.status(403).send("Incorrect Password.")
     }
-    delete user.password
+    delete user.user_password
+    req.session.user = user
     return res.status(200).send(req.session.user)
   },
   logout: (req, res) => {

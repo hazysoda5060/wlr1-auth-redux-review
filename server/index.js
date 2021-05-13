@@ -30,7 +30,7 @@ massive({
   app.set('db', db)
   console.log("Database connected successfully")
   // SERVER LISTENING
-  app.listen(SERVER_PORT, () => console.log(`Server listening on port ${SERVER_PORT}`))
+  app.listen(SERVER_PORT, () => console.log(`Server listening on port ${SERVER_PORT} :3`))
 }).catch(err => console.log(err))
 
 
